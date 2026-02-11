@@ -153,7 +153,7 @@ async function getUser(id) {
 
 **Rules:**
 - Create specific error classes for domain errors
-- Never swallow exceptions silently
+- Never swallow exceptions without logging
 - Log errors with context (user ID, request ID, etc.)
 - Use error boundaries at system edges
 - Return Result types for expected failures (optional)

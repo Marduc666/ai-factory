@@ -297,6 +297,83 @@ AI Factory can configure these MCP servers:
 
 Configuration saved to `.claude/settings.local.json` (gitignored).
 
+## Security
+
+**Security is a first-class citizen in AI Factory.** Skills downloaded from external sources (skills.sh, GitHub, URLs) can contain prompt injection attacks — malicious instructions hidden inside SKILL.md files that hijack agent behavior, steal credentials, or execute destructive commands.
+
+AI Factory protects against this with a **mandatory two-level security scan** that runs before any external skill is used:
+
+```
+External skill downloaded
+         │
+         ▼
+┌─── Level 1: Automated Scanner ────────────────────────────┐
+│                                                            │
+│  Python-based static analysis (security-scan.py)           │
+│                                                            │
+│  Detects:                                                  │
+│  ✓ Prompt injection patterns                               │
+│    ("ignore previous instructions", fake <system> tags)    │
+│  ✓ Data exfiltration attempts                              │
+│    (curl with .env/secrets, reading ~/.ssh, ~/.aws)        │
+│  ✓ Stealth instructions                                    │
+│    ("do not tell the user", "silently", "secretly")        │
+│  ✓ Destructive commands (rm -rf, fork bombs, disk format)  │
+│  ✓ Config tampering (.claude/, .bashrc, .gitconfig)        │
+│  ✓ Encoded payloads (base64, hex, zero-width characters)   │
+│  ✓ Social engineering ("authorized by admin")              │
+│  ✓ Hidden HTML comments with suspicious content            │
+│                                                            │
+│  Smart code-block awareness: patterns inside markdown      │
+│  fenced code blocks are demoted to warnings (docs/examples)│
+│                                                            │
+└──────────────────────┬─────────────────────────────────────┘
+                       │ CLEAN/WARNINGS?
+                       ▼
+┌─── Level 2: LLM Semantic Review ──────────────────────────┐
+│                                                            │
+│  The AI agent reads all skill files and evaluates:         │
+│                                                            │
+│  ✓ Does every instruction serve the skill's stated purpose?│
+│  ✓ Are there requests to access sensitive user data?       │
+│  ✓ Is there anything unrelated to the skill's goal?        │
+│  ✓ Are there manipulation attempts via urgency/authority?  │
+│  ✓ Subtle rephrasing of known attacks that regex misses    │
+│  ✓ "Does this feel right?" — a linter asking for network   │
+│    access, a formatter reading SSH keys, etc.              │
+│                                                            │
+└──────────────────────┬─────────────────────────────────────┘
+                       │ Both levels pass?
+                       ▼
+                ✅ Skill is safe to use
+```
+
+**Why two levels?**
+
+| Level | Catches | Misses |
+|-------|---------|--------|
+| **Python scanner** | Known patterns, encoded payloads, invisible characters, HTML comment injections | Rephrased attacks, novel techniques |
+| **LLM semantic review** | Intent and context, creative rephrasing, suspicious tool combinations | Encoded data, zero-width chars, binary payloads |
+
+They complement each other — the scanner is deterministic and catches what LLMs might skip over; the LLM understands meaning and catches what regex can't express.
+
+**Scan results:**
+- **CLEAN** (exit 0) — no threats, safe to install
+- **BLOCKED** (exit 1) — critical threats detected, skill is deleted and user is warned
+- **WARNINGS** (exit 2) — suspicious patterns found, user must explicitly confirm
+
+A skill with **any CRITICAL threat is never installed**. No exceptions, no overrides.
+
+### Running the scanner manually
+
+```bash
+# Scan a skill directory
+python3 .claude/skills/skill-generator/scripts/security-scan.py ./my-downloaded-skill/
+
+# Scan a single SKILL.md file
+python3 .claude/skills/skill-generator/scripts/security-scan.py ./my-skill/SKILL.md
+```
+
 ## Skill Acquisition Strategy
 
 AI Factory follows this strategy for skills:
@@ -305,11 +382,14 @@ AI Factory follows this strategy for skills:
 For each recommended skill:
   1. Search skills.sh: npx skills search <name>
   2. If found → Install: npx skills install <name>
-  3. If not found → Generate: /ai-factory.skill-generator <name>
-  4. Has reference docs? → Learn: /ai-factory.skill-generator <url1> [url2]...
+  3. Security scan → python3 security-scan.py <path>
+     - BLOCKED? → remove, warn user, skip
+     - WARNINGS? → show to user, ask confirmation
+  4. If not found → Generate: /ai-factory.skill-generator <name>
+  5. Has reference docs? → Learn: /ai-factory.skill-generator <url1> [url2]...
 ```
 
-**Never reinvent existing skills** - always check skills.sh first. When reference documentation is available, use **Learn Mode** to generate skills from real sources.
+**Never reinvent existing skills** - always check skills.sh first. **Never trust external skills blindly** - always scan before use. When reference documentation is available, use **Learn Mode** to generate skills from real sources.
 
 ## CLI Commands
 
@@ -423,7 +503,7 @@ All implementations include verbose, configurable logging:
 `.ai-factory.json`:
 ```json
 {
-  "version": "1.2.0",
+  "version": "1.0.0",
   "agent": "claude",
   "skillsDir": ".claude/skills",
   "installedSkills": ["ai-factory", "feature", "task", "implement", "commit"],
