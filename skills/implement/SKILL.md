@@ -233,6 +233,10 @@ Files modified:
 
 Ready to commit? Use:
 /ai-factory.commit
+
+> **Tip:** After committing, it's recommended to start a **new session**
+> (or at least run `/clear`) before continuing with other tasks.
+> This frees up context and avoids confusion from the previous implementation.
 ```
 
 **Handle plan file after completion:**
