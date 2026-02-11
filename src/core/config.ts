@@ -1,5 +1,9 @@
 import path from 'path';
+import { createRequire } from 'module';
 import { readJsonFile, writeJsonFile, fileExists } from '../utils/fs.js';
+
+const require = createRequire(import.meta.url);
+const pkg = require('../../package.json');
 
 export interface AiFactoryConfig {
   version: string;
@@ -14,7 +18,7 @@ export interface AiFactoryConfig {
 }
 
 const CONFIG_FILENAME = '.ai-factory.json';
-const CURRENT_VERSION = '1.2.0';
+const CURRENT_VERSION: string = pkg.version;
 
 export function getConfigPath(projectDir: string): string {
   return path.join(projectDir, CONFIG_FILENAME);
