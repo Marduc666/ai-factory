@@ -21,6 +21,25 @@ ai-factory init
 - **Spec-driven development** — AI follows plans, not random exploration. Predictable, resumable, reviewable
 - **Community skills** — leverage [skills.sh](https://skills.sh) ecosystem or generate custom skills
 - **Works with your stack** — Next.js, Laravel, Django, Express, and more
+- **Multi-agent support** — Claude Code, Cursor, Codex CLI, GitHub Copilot, Gemini CLI, Junie, or any agent
+
+---
+
+## Supported Agents
+
+AI Factory works with any AI coding agent. During `ai-factory init`, you choose your target agent and skills are installed to the correct directory with paths adapted automatically:
+
+| Agent | Config Directory | Skills Directory |
+|-------|-----------------|-----------------|
+| Claude Code | `.claude/` | `.claude/skills/` |
+| Cursor | `.cursor/` | `.cursor/skills/` |
+| Codex CLI | `.codex/` | `.codex/skills/` |
+| GitHub Copilot | `.github/` | `.github/skills/` |
+| Gemini CLI | `.gemini/` | `.gemini/skills/` |
+| Junie | `.junie/` | `.junie/skills/` |
+| Universal / Other | `.ai/` | `.ai/skills/` |
+
+MCP server configuration is currently supported for Claude Code. Other agents get skills installed with correct paths but without MCP auto-configuration.
 
 ---
 
@@ -47,12 +66,13 @@ ai-factory init
 ```
 
 This will:
+- Ask which AI agent you use (Claude, Cursor, Codex, Copilot, Gemini, Junie, or Universal)
 - Detect your project stack
 - Ask which base skills to install
-- Configure MCP servers (optional)
-- Set up `.claude/skills/` directory
+- Configure MCP servers (for supported agents)
+- Set up skills directory (e.g. `.claude/skills/`, `.codex/skills/`, etc.)
 
-Then open Claude Code and start working:
+Then open your AI agent and start working:
 
 ```
 /ai-factory
@@ -321,7 +341,7 @@ AI Factory can configure these MCP servers:
 | Postgres | Database queries | `DATABASE_URL` |
 | Filesystem | Advanced file operations | - |
 
-Configuration saved to `.claude/settings.local.json` (gitignored).
+Configuration saved to agent's settings file (e.g. `.claude/settings.local.json` for Claude Code, gitignored).
 
 ## Security
 
@@ -345,7 +365,7 @@ External skill downloaded
 │  ✓ Stealth instructions                                    │
 │    ("do not tell the user", "silently", "secretly")        │
 │  ✓ Destructive commands (rm -rf, fork bombs, disk format)  │
-│  ✓ Config tampering (.claude/, .bashrc, .gitconfig)        │
+│  ✓ Config tampering (agent dirs, .bashrc, .gitconfig)      │
 │  ✓ Encoded payloads (base64, hex, zero-width characters)   │
 │  ✓ Social engineering ("authorized by admin")              │
 │  ✓ Hidden HTML comments with suspicious content            │
@@ -393,11 +413,15 @@ A skill with **any CRITICAL threat is never installed**. No exceptions, no overr
 ### Running the scanner manually
 
 ```bash
-# Scan a skill directory
+# Scan a skill directory (use your agent's skills path)
 python3 .claude/skills/skill-generator/scripts/security-scan.py ./my-downloaded-skill/
 
 # Scan a single SKILL.md file
 python3 .claude/skills/skill-generator/scripts/security-scan.py ./my-skill/SKILL.md
+
+# For other agents, adjust the path accordingly:
+# python3 .codex/skills/skill-generator/scripts/security-scan.py ./my-skill/
+# python3 .ai/skills/skill-generator/scripts/security-scan.py ./my-skill/
 ```
 
 ## Skill Acquisition Strategy
@@ -429,11 +453,11 @@ ai-factory update
 
 ## Project Structure
 
-After initialization:
+After initialization (example for Claude Code — other agents use their own directory):
 
 ```
 your-project/
-├── .claude/
+├── .claude/                   # Agent config dir (varies: .cursor/, .codex/, .ai/, etc.)
 │   ├── skills/
 │   │   ├── ai-factory/
 │   │   ├── feature/
@@ -443,7 +467,7 @@ your-project/
 │   │   ├── commit/
 │   │   ├── review/
 │   │   └── skill-generator/
-│   └── settings.local.json    # MCP config (gitignored)
+│   └── settings.local.json    # MCP config (Claude only, gitignored)
 ├── .ai-factory/               # AI Factory working directory
 │   ├── DESCRIPTION.md         # Project specification
 │   ├── PLAN.md                # Current plan (from /task)
@@ -542,13 +566,19 @@ All implementations include verbose, configurable logging:
 }
 ```
 
+The `agent` field can be any supported agent ID: `claude`, `cursor`, `codex`, `copilot`, `gemini`, `junie`, or `universal`. The `skillsDir` is set automatically based on the chosen agent.
+
 ![happy](https://github.com/lee-to/ai-factory/raw/main/art/happy.png)
 
 ## Links
 
 - [skills.sh](https://skills.sh) - Skill marketplace
 - [Agent Skills Spec](https://agentskills.io) - Skill specification
-- [Claude Code](https://claude.ai/code) - AI coding assistant
+- [Claude Code](https://claude.ai/code) - Anthropic's AI coding agent
+- [Cursor](https://cursor.com) - AI-powered code editor
+- [Codex CLI](https://github.com/openai/codex) - OpenAI's coding agent
+- [Gemini CLI](https://github.com/google-gemini/gemini-cli) - Google's coding agent
+- [Junie](https://www.jetbrains.com/junie/) - JetBrains' AI coding agent
 
 ## License
 

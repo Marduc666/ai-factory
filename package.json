@@ -2,7 +2,7 @@
   "name": "ai-factory",
   "version": "1.4.0",
   "type": "module",
-  "description": "CLI tool for automating Claude Code context setup in projects",
+  "description": "CLI tool for automating AI agent context setup in projects",
   "main": "dist/cli/index.js",
   "types": "dist/cli/index.d.ts",
   "bin": {
