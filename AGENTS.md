@@ -48,8 +48,8 @@ ai-factory/
 ### Working Directory
 All AI Factory files in user projects go to `.ai-factory/`:
 - `.ai-factory/DESCRIPTION.md` - project specification
-- `.ai-factory/PLAN.md` - task plan (from /task)
-- `.ai-factory/features/feature-*.md` - feature plans (from /feature)
+- `.ai-factory/PLAN.md` - task plan (from /ai-factory.task)
+- `.ai-factory/features/feature-*.md` - feature plans (from /ai-factory.feature)
 
 ### Skill Naming
 All skills use `ai-factory.` namespace prefix:

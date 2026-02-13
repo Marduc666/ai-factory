@@ -157,7 +157,7 @@ function fixedFunction(input) {
 
 ### Example 1: Null Reference Error
 
-**User:** `/fix TypeError: Cannot read property 'name' of undefined in UserProfile`
+**User:** `/ai-factory.fix TypeError: Cannot read property 'name' of undefined in UserProfile`
 
 **Actions:**
 1. Search for UserProfile component/function
@@ -167,7 +167,7 @@ function fixedFunction(input) {
 
 ### Example 2: API Returns Wrong Data
 
-**User:** `/fix /api/orders returns empty array for authenticated users`
+**User:** `/ai-factory.fix /api/orders returns empty array for authenticated users`
 
 **Actions:**
 1. Find orders API endpoint
@@ -178,7 +178,7 @@ function fixedFunction(input) {
 
 ### Example 3: Form Validation Not Working
 
-**User:** `/fix email validation accepts invalid emails`
+**User:** `/ai-factory.fix email validation accepts invalid emails`
 
 **Actions:**
 1. Find email validation logic

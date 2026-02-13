@@ -84,10 +84,10 @@ For each skill, identify what's missing based on collected intelligence:
 **3.1: Patch-driven gaps**
 
 Compare patch patterns against skill instructions:
-- Does `/fix` mention the most common error categories from patches? If not → add them
-- Does `/implement` warn about the pitfalls found in patches? If not → add guards
-- Does `/task` include logging/validation requirements for problem areas? If not → enhance
-- Does `/review` check for the patterns that caused bugs? If not → add checklist items
+- Does `/ai-factory.fix` mention the most common error categories from patches? If not → add them
+- Does `/ai-factory.implement` warn about the pitfalls found in patches? If not → add guards
+- Does `/ai-factory.task` include logging/validation requirements for problem areas? If not → enhance
+- Does `/ai-factory.review` check for the patterns that caused bugs? If not → add checklist items
 
 **3.2: Tech-stack gaps**
 
@@ -220,12 +220,12 @@ Improvements applied: Y
 
 | Skill | Learns From | Example Enhancement |
 |-------|-------------|---------------------|
-| `/fix` | Patches → common errors | "Check for X before accessing Y" |
-| `/implement` | Patches → prevention rules | "When creating models, always validate Z" |
-| `/task` | Patches → logging gaps | "Add validation task for nullable fields" |
-| `/review` | Patches → missed issues | "Check: are all optional relations null-safe?" |
-| `/commit` | Codebase → conventions | "Use project's commit prefix format" |
-| `/feature` | Codebase → patterns | "Default branch prefix based on project convention" |
+| `/ai-factory.fix` | Patches → common errors | "Check for X before accessing Y" |
+| `/ai-factory.implement` | Patches → prevention rules | "When creating models, always validate Z" |
+| `/ai-factory.task` | Patches → logging gaps | "Add validation task for nullable fields" |
+| `/ai-factory.review` | Patches → missed issues | "Check: are all optional relations null-safe?" |
+| `/ai-factory.commit` | Codebase → conventions | "Use project's commit prefix format" |
+| `/ai-factory.feature` | Codebase → patterns | "Default branch prefix based on project convention" |
 
 ## Important Rules
 
@@ -244,10 +244,10 @@ Improvements applied: Y
 /ai-factory.evolve fix
 
 → Found 6/10 patches tagged #null-check
-→ Improvement: Add to /fix Step 2:
+→ Improvement: Add to /ai-factory.fix Step 2:
   "PRIORITY CHECK: Look for optional/nullable fields accessed
    without null guards. This is the #1 source of bugs in this project."
-→ Improvement: Add to /review checklist:
+→ Improvement: Add to /ai-factory.review checklist:
   "- [ ] All nullable DB fields have null checks in UI/API layer"
 ```
 
@@ -258,11 +258,11 @@ Improvements applied: Y
 
 → Stack: Laravel + Eloquent (from DESCRIPTION.md)
 → Found 3 patches tagged #n-plus-one #database
-→ Improvement: Add to /implement logging:
+→ Improvement: Add to /ai-factory.implement logging:
   "Enable query logging: DB::enableQueryLog() in DEBUG mode"
-→ Improvement: Add to /review checklist:
+→ Improvement: Add to /ai-factory.review checklist:
   "- [ ] Eager loading used for related models (no N+1)"
-→ Improvement: Add to /task descriptions:
+→ Improvement: Add to /ai-factory.task descriptions:
   "Include 'use ->with() for relations' in DB-related tasks"
 ```
 
@@ -274,11 +274,11 @@ Improvements applied: Y
 → No patches found (first run)
 → Analyzing project context only...
 → Stack: Next.js 14 + Prisma + TypeScript
-→ Improvement: Add to /implement:
+→ Improvement: Add to /ai-factory.implement:
   "Use server actions for mutations, API routes for external APIs"
-→ Improvement: Add to /fix:
+→ Improvement: Add to /ai-factory.fix:
   "For Prisma errors, check schema.prisma for field types first"
-→ Improvement: Add to /review:
+→ Improvement: Add to /ai-factory.review:
   "- [ ] Server components don't use client-only hooks"
 ```
 

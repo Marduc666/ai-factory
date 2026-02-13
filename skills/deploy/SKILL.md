@@ -39,14 +39,14 @@ Run deployment readiness checks:
 
 ### With Environment Argument
 
-#### `/deploy staging`
+#### `/ai-factory.deploy staging`
 
 1. Run pre-flight checks
 2. Generate changelog since last staging deploy
 3. Provide deployment commands for staging environment
 4. Tag release as staging-{date}
 
-#### `/deploy production`
+#### `/ai-factory.deploy production`
 
 1. Run ALL pre-flight checks (more strict)
 2. Require clean git status
@@ -128,11 +128,11 @@ Detect and provide commands for:
 
 ## Examples
 
-**User:** `/deploy`
+**User:** `/ai-factory.deploy`
 Run all pre-flight checks, report readiness.
 
-**User:** `/deploy staging`
+**User:** `/ai-factory.deploy staging`
 Prepare staging deployment with changelog.
 
-**User:** `/deploy production`
+**User:** `/ai-factory.deploy production`
 Full production deployment workflow with release notes.

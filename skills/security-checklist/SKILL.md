@@ -11,14 +11,14 @@ Comprehensive security checklist based on OWASP Top 10 (2021) and industry best 
 
 ## Quick Reference
 
-- `/security-checklist` — Full audit checklist
-- `/security-checklist auth` — Authentication & sessions
-- `/security-checklist injection` — SQL/NoSQL/Command injection
-- `/security-checklist xss` — Cross-site scripting
-- `/security-checklist csrf` — Cross-site request forgery
-- `/security-checklist secrets` — Secrets & credentials
-- `/security-checklist api` — API security
-- `/security-checklist infra` — Infrastructure security
+- `/ai-factory.security-checklist` — Full audit checklist
+- `/ai-factory.security-checklist auth` — Authentication & sessions
+- `/ai-factory.security-checklist injection` — SQL/NoSQL/Command injection
+- `/ai-factory.security-checklist xss` — Cross-site scripting
+- `/ai-factory.security-checklist csrf` — Cross-site request forgery
+- `/ai-factory.security-checklist secrets` — Secrets & credentials
+- `/ai-factory.security-checklist api` — API security
+- `/ai-factory.security-checklist infra` — Infrastructure security
 
 ## Quick Automated Audit
 

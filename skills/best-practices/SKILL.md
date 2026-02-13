@@ -11,12 +11,12 @@ Universal code quality guidelines applicable to any language or framework.
 
 ## Quick Reference
 
-- `/best-practices` — Full overview
-- `/best-practices naming` — Naming conventions
-- `/best-practices structure` — Code organization
-- `/best-practices errors` — Error handling
-- `/best-practices testing` — Testing practices
-- `/best-practices review` — Code review checklist
+- `/ai-factory.best-practices` — Full overview
+- `/ai-factory.best-practices naming` — Naming conventions
+- `/ai-factory.best-practices structure` — Code organization
+- `/ai-factory.best-practices errors` — Error handling
+- `/ai-factory.best-practices testing` — Testing practices
+- `/ai-factory.best-practices review` — Code review checklist
 
 ---
 
@@ -222,7 +222,7 @@ describe('calculateDiscount', () => {
 ### Reviewer Checklist
 - [ ] **Correctness**: Does it do what it claims?
 - [ ] **Edge cases**: What could go wrong?
-- [ ] **Security**: Any vulnerabilities? (see `/security-checklist`)
+- [ ] **Security**: Any vulnerabilities? (see `/ai-factory.security-checklist`)
 - [ ] **Performance**: Any obvious bottlenecks?
 - [ ] **Readability**: Can I understand it in 5 minutes?
 - [ ] **Tests**: Are critical paths covered?

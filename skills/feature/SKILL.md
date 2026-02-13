@@ -1,6 +1,6 @@
 ---
 name: ai-factory.feature
-description: Start a new feature development. Creates a git branch with a logical name based on feature description, then invokes /task to create an implementation plan. Use when user says "new feature", "start feature", "implement feature", or "add feature".
+description: Start a new feature development. Creates a git branch with a logical name based on feature description, then invokes /ai-factory.task to create an implementation plan. Use when user says "new feature", "start feature", "implement feature", or "add feature".
 argument-hint: <feature description>
 allowed-tools: Bash(git *) Read Write Skill AskUserQuestion
 disable-model-invocation: true
@@ -112,7 +112,7 @@ CONTEXT FROM /ai-factory.feature:
 - Logging: verbose/standard/minimal
 ```
 
-**IMPORTANT:** Pass the exact plan filename to /task. This distinguishes feature-based work from direct /task calls.
+**IMPORTANT:** Pass the exact plan filename to /ai-factory.task. This distinguishes feature-based work from direct /ai-factory.task calls.
 
 Pass along:
 - Full feature description
@@ -129,7 +129,7 @@ git branch --show-current  # → feature/user-authentication
 
 ## Examples
 
-**User:** `/feature Add user authentication with email/password and OAuth`
+**User:** `/ai-factory.feature Add user authentication with email/password and OAuth`
 
 **Actions:**
 1. Parse: authentication feature, email/password + OAuth
@@ -138,7 +138,7 @@ git branch --show-current  # → feature/user-authentication
 4. Create branch: `git checkout -b feature/user-authentication`
 5. Call: `/ai-factory.task Add user authentication with email/password and OAuth`
 
-**User:** `/feature Fix cart not updating quantities correctly`
+**User:** `/ai-factory.feature Fix cart not updating quantities correctly`
 
 **Actions:**
 1. Parse: bug fix, cart quantities

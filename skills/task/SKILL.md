@@ -159,7 +159,7 @@ Created: [date]
 mkdir -p .ai-factory/features  # only when saving to features/
 ```
 
-Save to: `.ai-factory/PLAN.md` (direct call) or `.ai-factory/features/<branch-name>.md` (from /feature)
+Save to: `.ai-factory/PLAN.md` (direct call) or `.ai-factory/features/<branch-name>.md` (from /ai-factory.feature)
 
 ### Step 8: Confirm Plan
 

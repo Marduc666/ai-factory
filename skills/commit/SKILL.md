@@ -84,7 +84,7 @@ When invoked:
 4. Ask for confirmation or modifications
 5. Execute `git commit` with the message
 
-If argument provided (e.g., `/commit auth`):
+If argument provided (e.g., `/ai-factory.commit auth`):
 - Use it as the scope
 - Or as context for the commit message
 

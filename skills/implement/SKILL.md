@@ -75,7 +75,7 @@ Based on choice:
 **Check for plan files in this order:**
 
 ```
-1. .ai-factory/PLAN.md exists? → Use it (direct /task call)
+1. .ai-factory/PLAN.md exists? → Use it (direct /ai-factory.task call)
 2. No .ai-factory/PLAN.md → Check current git branch:
    git branch --show-current
    → Look for .ai-factory/features/<branch-name>.md (e.g., .ai-factory/features/feature-user-auth.md)
@@ -241,7 +241,7 @@ Ready to commit? Use:
 
 **Handle plan file after completion:**
 
-- **If `.ai-factory/PLAN.md`** (direct /task, not from /feature):
+- **If `.ai-factory/PLAN.md`** (direct /ai-factory.task, not from /ai-factory.feature):
   ```
   Would you like to delete .ai-factory/PLAN.md? (It's no longer needed)
   - [ ] Yes, delete it

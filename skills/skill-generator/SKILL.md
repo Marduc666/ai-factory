@@ -149,12 +149,12 @@ Install anyway? [y/N]
 
 ## Quick Commands
 
-- `/skill-generator <name>` - Generate a new skill interactively
-- `/skill-generator <url> [url2] [url3]...` - **Learn Mode**: study URLs and generate a skill from them
-- `/skill-generator search <query>` - Search existing skills on skills.sh for inspiration
-- `/skill-generator scan <path>` - **Security scan**: run two-level security check on a skill
-- `/skill-generator validate <path>` - Validate an existing skill
-- `/skill-generator template <type>` - Get a template (basic, task, reference, visual)
+- `/ai-factory.skill-generator <name>` - Generate a new skill interactively
+- `/ai-factory.skill-generator <url> [url2] [url3]...` - **Learn Mode**: study URLs and generate a skill from them
+- `/ai-factory.skill-generator search <query>` - Search existing skills on skills.sh for inspiration
+- `/ai-factory.skill-generator scan <path>` - **Security scan**: run two-level security check on a skill
+- `/ai-factory.skill-generator validate <path>` - Validate an existing skill
+- `/ai-factory.skill-generator template <type>` - Get a template (basic, task, reference, visual)
 
 ## Argument Detection
 
@@ -172,7 +172,7 @@ Check $ARGUMENTS:
 
 ### Security Scan Mode
 
-**Trigger:** `/skill-generator scan <path>`
+**Trigger:** `/ai-factory.skill-generator scan <path>`
 
 When `$ARGUMENTS` starts with `scan`:
 
@@ -226,7 +226,7 @@ Follow the [Learn Mode Workflow](references/LEARN-MODE.md).
 4. Synthesize all material into a knowledge base
 5. Ask the user 2-3 targeted questions (skill name, type, customization)
 6. Generate a complete skill package enriched with the learned content
-7. **AUTO-SCAN**: Run `/skill-generator scan <generated-skill-path>` on the result
+7. **AUTO-SCAN**: Run `/ai-factory.skill-generator scan <generated-skill-path>` on the result
 
 If NO URLs and no special command detected — proceed with the standard workflow below.
 

@@ -11,12 +11,12 @@ Practical guidelines for software architecture decisions.
 
 ## Quick Reference
 
-- `/architecture` — Overview and decision guide
-- `/architecture clean` — Clean Architecture
-- `/architecture ddd` — Domain-Driven Design
-- `/architecture microservices` — Microservices patterns
-- `/architecture monolith` — Modular monolith
-- `/architecture layers` — Layered architecture
+- `/ai-factory.architecture` — Overview and decision guide
+- `/ai-factory.architecture clean` — Clean Architecture
+- `/ai-factory.architecture ddd` — Domain-Driven Design
+- `/ai-factory.architecture microservices` — Microservices patterns
+- `/ai-factory.architecture monolith` — Modular monolith
+- `/ai-factory.architecture layers` — Layered architecture
 
 ---
 

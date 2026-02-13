@@ -94,13 +94,13 @@ Perform thorough code reviews focusing on correctness, security, performance, an
 
 ## Examples
 
-**User:** `/review`
+**User:** `/ai-factory.review`
 Review staged changes in current repository.
 
-**User:** `/review 123`
+**User:** `/ai-factory.review 123`
 Review PR #123 using GitHub CLI.
 
-**User:** `/review https://github.com/org/repo/pull/123`
+**User:** `/ai-factory.review https://github.com/org/repo/pull/123`
 Review PR from URL.
 
 ## Integration

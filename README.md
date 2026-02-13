@@ -118,7 +118,7 @@ Then open your AI agent and start working:
                              ┌─────────────────────┐                        │
                              │                     │                        │
                              │ /ai-factory.improve │                        │
-                             │    (optional)        │                        │
+                             │    (optional)       │                        │
                              │                     │                        │
                              │ Refine plan with    │                        │
                              │ deeper analysis     │                        │
@@ -126,14 +126,15 @@ Then open your AI agent and start working:
                              └──────────┬──────────┘                        │
                                         │                                   │
                                         ▼                                   │
-                             ┌─────────────────────┐                        │
-                             │                     │◀── reads patches ──────┘
+                             ┌──────────────────────┐                       │
+                             │                      │◀── reads patches ─────┘
                              │ /ai-factory.implement│
-                             │                     │ ──── error? ──▶ /fix
-                             │  Execute tasks      │
-                             │  Commit checkpoints │
-                             │                     │
-                             └──────────┬──────────┘
+                             │ ──── error?          │
+                             │  ──▶ /ai-factory.fix │
+                             │  Execute tasks       │
+                             │  Commit checkpoints  │
+                             │                      │
+                             └──────────┬───────────┘
                                         │
                                         ▼
                              ┌─────────────────────┐
@@ -223,7 +224,7 @@ Refine an existing plan with a second iteration:
 /ai-factory.improve добавь валидацию и обработку ошибок # Improve based on specific feedback
 ```
 - Finds the active plan (`.ai-factory/PLAN.md` or branch-based `features/<branch>.md`)
-- Performs deeper codebase analysis than the initial `/task` planning
+- Performs deeper codebase analysis than the initial `/ai-factory.task` planning
 - Finds missing tasks (migrations, configs, middleware)
 - Fixes task dependencies and descriptions
 - Removes redundant tasks
@@ -258,7 +259,7 @@ Quick bug fix without plans:
 Self-improve skills based on project experience:
 ```
 /ai-factory.evolve          # Evolve all skills
-/ai-factory.evolve fix      # Evolve only /fix skill
+/ai-factory.evolve fix      # Evolve only /ai-factory.fix skill
 /ai-factory.evolve all      # Evolve all skills
 ```
 - Reads all patches from `.ai-factory/patches/` — finds recurring problems
@@ -266,7 +267,7 @@ Self-improve skills based on project experience:
 - Identifies gaps in existing skills (missing guards, tech-specific pitfalls)
 - Proposes targeted improvements with user approval
 - Saves evolution log to `.ai-factory/evolutions/`
-- The more `/fix` patches you accumulate, the smarter `/evolve` becomes
+- The more `/ai-factory.fix` patches you accumulate, the smarter `/ai-factory.evolve` becomes
 
 ### `/ai-factory.commit`
 Creates conventional commits:
@@ -470,12 +471,12 @@ your-project/
 │   └── settings.local.json    # MCP config (Claude/Cursor, gitignored)
 ├── .ai-factory/               # AI Factory working directory
 │   ├── DESCRIPTION.md         # Project specification
-│   ├── PLAN.md                # Current plan (from /task)
-│   ├── features/              # Feature plans (from /feature)
+│   ├── PLAN.md                # Current plan (from /ai-factory.task)
+│   ├── features/              # Feature plans (from /ai-factory.feature)
 │   │   └── feature-*.md
-│   ├── patches/               # Self-improvement patches (from /fix)
+│   ├── patches/               # Self-improvement patches (from /ai-factory.fix)
 │   │   └── 2026-02-07-14.30.md
-│   └── evolutions/            # Evolution logs (from /evolve)
+│   └── evolutions/            # Evolution logs (from /ai-factory.evolve)
 │       └── 2026-02-08-10.00.md
 └── .ai-factory.json           # AI Factory config
 ```
@@ -485,14 +486,14 @@ your-project/
 AI Factory has a built-in learning loop. Every bug fix creates a **patch** — a structured knowledge artifact that helps AI avoid the same mistakes in the future.
 
 ```
-/fix → finds bug → fixes it → creates patch → next /fix or /implement reads all patches → better code
+/ai-factory.fix → finds bug → fixes it → creates patch → next /ai-factory.fix or /ai-factory.implement reads all patches → better code
 ```
 
 **How it works:**
 
 1. `/ai-factory.fix` fixes a bug and creates a patch file in `.ai-factory/patches/YYYY-MM-DD-HH.mm.md`
 2. Each patch documents: **Problem**, **Root Cause**, **Solution**, **Prevention**, and **Tags**
-3. Before any `/fix` or `/implement`, AI reads all existing patches
+3. Before any `/ai-factory.fix` or `/ai-factory.implement`, AI reads all existing patches
 4. AI applies lessons learned — avoids patterns that caused bugs, follows patterns that prevented them
 
 **Example patch** (`.ai-factory/patches/2026-02-07-14.30.md`):
@@ -521,7 +522,7 @@ Added optional chaining: `user.avatar?.url` with fallback.
 `#null-check` `#react` `#optional-field`
 ```
 
-The more you use `/fix`, the smarter AI becomes on your project. Patches accumulate and create a project-specific knowledge base.
+The more you use `/ai-factory.fix`, the smarter AI becomes on your project. Patches accumulate and create a project-specific knowledge base.
 
 **Periodic evolution** -- run `/ai-factory.evolve` to analyze all patches and automatically improve skills:
 
