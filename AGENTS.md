@@ -198,6 +198,42 @@ ai-factory update
 6. **No tests unless asked** - respect user's testing preference
 7. **Commit checkpoints** - for plans with 5+ tasks
 
+## Documentation Structure
+
+User-facing documentation is split between a lean README and detailed `docs/` pages:
+
+```
+README.md                    # Landing page (~105 lines) — first impression, install, example workflow
+docs/
+├── getting-started.md       # What is AI Factory, supported agents table, first project walkthrough, CLI
+├── workflow.md              # Workflow diagram, "When to Use What" table, workflow skills overview
+├── skills.md                # Full reference: Workflow Skills + Utility Skills
+├── plan-files.md            # Plan files, self-improvement patches, skill acquisition strategy
+├── security.md              # Two-level security scanning system
+└── configuration.md         # .ai-factory.json, MCP config, project structure, best practices
+```
+
+### Principles
+
+1. **README is a landing page, not a manual.** It should contain: logo, tagline, "Why?", install, quick start, example workflow, documentation links table, external links, license. Nothing else.
+2. **Details go to `docs/`.** Each file is self-contained — one topic, one page. A user should be able to read a single doc file and get the full picture on that topic.
+3. **No duplication.** If information lives in `docs/`, README links to it — does not repeat it. The only exception: installation command appears in both README and `docs/getting-started.md` (users expect it in README).
+4. **Navigation.** Every docs/ file starts with `[← Back to README](../README.md)` and ends with a "See Also" section linking to 2-3 related pages. `getting-started.md` has "Next Steps" instead.
+5. **Workflow skills vs utility skills.** `docs/workflow.md` describes the 6 workflow skills (feature, task, improve, implement, fix, evolve) with concise 1-paragraph overviews. `docs/skills.md` has the full reference for ALL skills, split into "Workflow Skills" and "Utility Skills" sections.
+6. **Cross-links use relative paths.** From README: `docs/workflow.md`. Between docs: `workflow.md` (same directory).
+
+### When to Update What
+
+| Change | Update |
+|--------|--------|
+| New skill added | `docs/skills.md` (add to appropriate section), `docs/workflow.md` (if it's a workflow skill), README Documentation table description (if skill count text changes) |
+| New agent added | `docs/getting-started.md` (agents table), README (agent name in "Multi-agent support" bullet) |
+| Workflow logic changed | `docs/workflow.md` (diagram + skill descriptions), `docs/skills.md` (detailed reference) |
+| New config option | `docs/configuration.md` |
+| Security scanning changed | `docs/security.md` |
+| Plan file format changed | `docs/plan-files.md` |
+| New CLI command | `docs/getting-started.md` (CLI Commands section) |
+
 ## Common Changes
 
 ### Adding a new skill
@@ -233,11 +269,10 @@ To add support for a new AI coding agent:
    - If the agent uses a different structure (like OpenCode uses `{ mcp: { name: { type, command[], environment } } }`), add a branch in `configureMcp()` with format conversion
    - If MCP format matches standard — no changes needed
 
-3. **`README.md`** — update:
-   - Supported Agents table
-   - MCP support mention (if applicable)
-   - Agent list in Quick Start and Configuration sections
-   - Links section
+3. **Documentation** — update:
+   - `docs/getting-started.md` — Supported Agents table
+   - `docs/configuration.md` — MCP support mention (if applicable), agent ID in `.ai-factory.json` docs
+   - `README.md` — agent name in "Multi-agent support" bullet, Links section
 
 4. **`AGENTS.md`** — update Skills Location example if helpful
 
