@@ -279,6 +279,83 @@ If documentation preference is "yes":
   - Keep it - documents what was done
   - User can delete before merging if desired
 
+**Check if running in a git worktree:**
+
+Detect worktree context:
+```bash
+# If .git is a file (not a directory), we're in a worktree
+[ -f .git ]
+```
+
+**If we ARE in a worktree**, offer to merge back and clean up:
+
+```
+You're working in a parallel worktree.
+
+  Branch:    <current-branch>
+  Worktree:  <current-directory>
+  Main repo: <main-repo-path>
+
+Would you like to merge this branch into main and clean up?
+- [ ] Yes, merge and clean up (recommended)
+- [ ] No, I'll handle it manually
+```
+
+If user chooses **"Yes, merge and clean up"**:
+
+1. **Ensure everything is committed** — check `git status`. If uncommitted changes exist, suggest `/ai-factory.commit` first and wait.
+
+2. **Get main repo path:**
+   ```bash
+   MAIN_REPO=$(git rev-parse --git-common-dir | sed 's|/\.git$||')
+   BRANCH=$(git branch --show-current)
+   ```
+
+3. **Switch to main repo:**
+   ```bash
+   cd "${MAIN_REPO}"
+   ```
+
+4. **Merge the branch:**
+   ```bash
+   git checkout main
+   git pull origin main
+   git merge "${BRANCH}"
+   ```
+
+   If merge conflict occurs:
+   ```
+   ⚠️  Merge conflict detected. Resolve manually:
+     cd <main-repo-path>
+     git merge --abort   # to cancel
+     # or resolve conflicts and git commit
+   ```
+   → STOP here, do not proceed with cleanup.
+
+5. **Remove worktree and branch (only if merge succeeded):**
+   ```bash
+   git worktree remove <worktree-path>
+   git branch -d "${BRANCH}"
+   ```
+
+6. **Confirm:**
+   ```
+   ✅ Merged and cleaned up!
+
+     Branch <branch> merged into main.
+     Worktree removed.
+
+   You're now in: <main-repo-path> (main)
+   ```
+
+If user chooses **"No, I'll handle it manually"**, show a reminder:
+```
+To merge and clean up later:
+  cd <main-repo-path>
+  git merge <branch>
+  /ai-factory.feature --cleanup <branch>
+```
+
 **IMPORTANT: NO summary reports, NO analysis documents, NO wrap-up tasks.**
 
 ## Commands
