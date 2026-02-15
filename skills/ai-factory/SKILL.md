@@ -150,6 +150,7 @@ Proceed? [Y/n]
    - Exit 0 (CLEAN) → read files yourself (Level 2), verify intent, proceed
 4. Generate custom skills via `/ai-factory.skill-generator` (pass URLs for Learn Mode when docs are available)
 5. Configure MCP in `{{settings_file}}`
+6. Generate `AGENTS.md` in project root (see [AGENTS.md Generation](#agentsmd-generation))
 
 ---
 
@@ -250,7 +251,7 @@ Based on confirmed stack:
 
 **Step 4: Setup Context**
 
-Install skills and configure MCP as in Mode 1.
+Install skills, configure MCP, and generate `AGENTS.md` as in Mode 1.
 
 ---
 
@@ -283,7 +284,7 @@ Same as Mode 2.
 
 **Step 4: Setup Context**
 
-Install skills and configure MCP as in Mode 1.
+Install skills, configure MCP, and generate `AGENTS.md` as in Mode 1.
 
 ---
 
@@ -329,6 +330,66 @@ Install skills and configure MCP as in Mode 1.
 
 ---
 
+## AGENTS.md Generation
+
+**Generate `AGENTS.md` in the project root** as a structural map for AI agents. This file helps any AI agent (or new developer) quickly understand the project layout.
+
+**Scan the project** to build the structure:
+- Read directory tree (top 2-3 levels)
+- Identify key entry points (main files, config files, schemas)
+- Note existing documentation files
+- Reference `.ai-factory/DESCRIPTION.md` for tech stack
+
+**Template:**
+
+```markdown
+# AGENTS.md
+
+> Project map for AI agents. Keep this file up-to-date as the project evolves.
+
+## Project Overview
+[1-2 sentence description from DESCRIPTION.md]
+
+## Tech Stack
+- **Language:** [language]
+- **Framework:** [framework]
+- **Database:** [database]
+- **ORM:** [orm]
+
+## Project Structure
+\`\`\`
+[directory tree with inline comments explaining each directory]
+\`\`\`
+
+## Key Entry Points
+| File | Purpose |
+|------|---------|
+| [main entry] | [description] |
+| [config file] | [description] |
+| [schema file] | [description] |
+
+## Documentation
+| Document | Path | Description |
+|----------|------|-------------|
+| README | README.md | Project landing page |
+| [other docs if they exist] | | |
+
+## AI Context Files
+| File | Purpose |
+|------|---------|
+| AGENTS.md | This file — project structure map |
+| .ai-factory/DESCRIPTION.md | Project specification and tech stack |
+| CLAUDE.md | Claude Code instructions and preferences |
+```
+
+**Rules for AGENTS.md:**
+- Keep it factual — only describe what actually exists in the project
+- Update it when project structure changes significantly
+- The Documentation section will be maintained by `/ai-factory.docs`
+- Do NOT duplicate detailed content from DESCRIPTION.md — reference it instead
+
+---
+
 ## Rules
 
 1. **Search before generating** — Don't reinvent existing skills
@@ -346,7 +407,8 @@ After completing setup, tell the user:
 ```
 ✅ Project context configured!
 
-Project description: .ai-factory/DESCRIPTION.md (if created from prompt)
+Project description: .ai-factory/DESCRIPTION.md
+Project map: AGENTS.md
 Skills installed: [list]
 MCP configured: [list]
 
@@ -358,10 +420,33 @@ To start development:
 Ready when you are!
 ```
 
+**For existing projects (Mode 1), also suggest next steps:**
+
+```
+Your project already has code. You might also want to set up:
+
+- /ai-factory.docs — Generate project documentation
+- /ai-factory.build-automation — Configure build scripts and automation
+- /ai-factory.ci — Set up CI/CD pipeline
+- /ai-factory.dockerize — Containerize the project
+
+Would you like to run any of these now?
+```
+
+Present these as `AskUserQuestion` with multi-select options:
+1. Generate docs (`/ai-factory.docs`)
+2. Build automation (`/ai-factory.build-automation`)
+3. CI/CD (`/ai-factory.ci`)
+4. Dockerize (`/ai-factory.dockerize`)
+5. Skip — I'll do it later
+
+If user selects one or more → invoke the selected skills sequentially.
+If user skips → done.
+
 **DO NOT:**
 - ❌ Start writing project code
 - ❌ Create project files (src/, app/, etc.)
 - ❌ Implement features
-- ❌ Set up project structure beyond skills/MCP
+- ❌ Set up project structure beyond skills/MCP/AGENTS.md
 
-**Your job ends when skills and MCP are configured.** The user decides when to start implementation.
+**Your job ends when skills, MCP, and AGENTS.md are configured.** The user decides when to start implementation.

@@ -663,6 +663,31 @@ These originals are no longer needed. Delete them?
 
 **Do NOT auto-delete.** Always ask. The user may want to keep originals temporarily for reference or diff comparison.
 
+### Step 5: Update AGENTS.md
+
+**After any documentation changes**, update the Documentation section in `AGENTS.md` (if the file exists).
+
+Read `AGENTS.md` and find the `## Documentation` section. Update it to reflect the current state of all documentation files:
+
+```markdown
+## Documentation
+| Document | Path | Description |
+|----------|------|-------------|
+| README | README.md | Project landing page |
+| Getting Started | docs/getting-started.md | Installation, setup, first steps |
+| Architecture | docs/architecture.md | Project structure and patterns |
+| API Reference | docs/api.md | Endpoints, request/response formats |
+| Configuration | docs/configuration.md | Environment variables, config files |
+```
+
+**Rules:**
+- List README.md first, then all docs/ files in the same order as the README Documentation table
+- If files were moved/merged from root during Step 1.1, reflect the new locations
+- If new doc pages were created, add them
+- If doc pages were removed, remove them
+- Keep descriptions concise (under 10 words)
+- If `AGENTS.md` doesn't exist, skip this step silently
+
 ## Important Rules
 
 1. **Always ask before making changes** to existing documentation — show the plan first
