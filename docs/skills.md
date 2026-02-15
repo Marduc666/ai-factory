@@ -137,6 +137,33 @@ Generates and maintains project documentation:
 - Technical review — verifies links, structure, code examples, no content loss
 - Readability review — "new user eyes" checklist: is it clear, scannable, jargon-free?
 
+### `/ai-factory.build-automation [makefile|taskfile|justfile|mage]`
+Generates or enhances build automation files:
+```
+/ai-factory.build-automation              # Auto-detect or ask which tool
+/ai-factory.build-automation makefile     # Generate a Makefile
+/ai-factory.build-automation taskfile     # Generate a Taskfile.yml
+/ai-factory.build-automation justfile     # Generate a justfile
+/ai-factory.build-automation mage         # Generate a magefile.go
+```
+
+**Two modes — generate or enhance:**
+- **No build file exists?** — analyzes your project (language, framework, package manager, Docker, DB, linters) and generates a complete, best-practice build file from scratch
+- **Build file already exists?** — scans for gaps (missing targets, no help command, no Docker targets despite Dockerfile, missing preamble) and enhances it surgically, preserving your existing structure
+
+**Docker-aware** — when Dockerfile or docker-compose is detected:
+- Generates container lifecycle targets (`docker-build`, `docker-push`, `docker-logs`)
+- Separates dev vs production (`docker-dev`, `docker-prod-build`)
+- Adds `infra-up`/`infra-down` for dependency services (postgres, redis)
+- Creates container-exec variants (`docker-test`, `docker-lint`, `docker-shell`) for Docker-first projects
+
+**Post-generation integration:**
+- Updates README and existing docs with quick command reference
+- Suggests creating `AGENTS.md` with build commands for AI agents
+- Finds and updates any markdown files that already list project commands
+
+Supports Go, Node.js, Python, and PHP with framework-specific targets (Laravel artisan, Next.js, FastAPI, etc.).
+
 ### `/ai-factory.commit`
 Creates conventional commits:
 - Analyzes staged changes

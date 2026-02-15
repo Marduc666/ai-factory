@@ -9,7 +9,7 @@
   "version": "1.0.0",
   "agent": "claude",
   "skillsDir": ".claude/skills",
-  "installedSkills": ["ai-factory", "feature", "task", "improve", "implement", "commit"],
+  "installedSkills": ["ai-factory", "feature", "task", "improve", "implement", "commit", "build-automation"],
   "mcp": {
     "github": true,
     "postgres": false,
@@ -46,6 +46,7 @@ your-project/
 │   │   ├── improve/
 │   │   ├── implement/
 │   │   ├── commit/
+│   │   ├── build-automation/
 │   │   ├── docs/
 │   │   ├── review/
 │   │   └── skill-generator/
