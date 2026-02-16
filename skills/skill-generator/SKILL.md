@@ -1,7 +1,7 @@
 ---
 name: ai-factory.skill-generator
 description: Generate professional Agent Skills for Claude Code and other AI agents. Creates complete skill packages with SKILL.md, references, scripts, and templates. Use when creating new skills, generating custom slash commands, or building reusable AI capabilities. Validates against Agent Skills specification.
-argument-hint: [skill-name or "search <query>" or URL(s)]
+argument-hint: '[skill-name or "search <query>" or URL(s)]'
 allowed-tools: Read Grep Glob Write Bash(mkdir *) Bash(npx skills *) Bash(python *security-scan*) Bash(rm -rf *) WebFetch WebSearch
 metadata:
   author: skill-generator
@@ -226,8 +226,23 @@ When `$ARGUMENTS` starts with `validate`:
    - [ ] name is lowercase with hyphens only
    - [ ] description explains what AND when
    - [ ] frontmatter has no YAML syntax errors
+   - [ ] `argument-hint` with `[]` brackets is quoted (unquoted brackets break YAML parsing in OpenCode/Kilo Code and can crash Claude Code TUI — see below)
    - [ ] body is under 500 lines
    - [ ] all file references use relative paths
+
+   **argument-hint quoting rule:** In YAML, `[...]` is array syntax. An unquoted `argument-hint: [foo] bar` causes a YAML parse error (content after `]`), and `argument-hint: [topic: foo|bar]` is parsed as a dict-in-array which crashes Claude Code's React TUI. **Fix:** wrap the value in quotes.
+   ```yaml
+   # WRONG — YAML parse error or wrong type:
+   argument-hint: [--flag] <description>
+   argument-hint: [topic: hooks|state]
+
+   # CORRECT — always quote brackets:
+   argument-hint: "[--flag] <description>"
+   argument-hint: "[topic: hooks|state]"
+   argument-hint: '[name or "all"]'   # single quotes when value contains double quotes
+   ```
+   If this check fails, report it as `[FAIL]` with the fix suggestion.
+
 3. **Security scan — Level 1** (automated):
    ```bash
    python3 ~/{{skills_dir}}/skill-generator/scripts/security-scan.py <path>
@@ -346,7 +361,7 @@ name: skill-name                    # Required: lowercase, hyphens, max 64 chars
 description: >-                     # Required: max 1024 chars, explain what & when
   Detailed description of what this skill does and when to use it.
   Include keywords that help agents identify relevant tasks.
-argument-hint: [arg1] [arg2]        # Optional: shown in autocomplete
+argument-hint: "[arg1] [arg2]"      # Optional: shown in autocomplete (MUST quote brackets)
 disable-model-invocation: false     # Optional: true = user-only
 user-invocable: true                # Optional: false = model-only
 allowed-tools: Read Write Bash(git *)  # Optional: pre-approved tools
@@ -411,6 +426,7 @@ Checklist:
 - [ ] name is lowercase with hyphens only
 - [ ] description explains what AND when
 - [ ] frontmatter has no syntax errors
+- [ ] `argument-hint` with `[]` is quoted (`"..."` or `'...'`) — unquoted brackets break cross-agent compatibility
 - [ ] body is under 500 lines
 - [ ] references are relative paths
 - [ ] security scan: CLEAN or WARNINGS-only (no CRITICAL)

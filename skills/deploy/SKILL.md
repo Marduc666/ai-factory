@@ -1,7 +1,7 @@
 ---
 name: ai-factory.deploy
 description: Prepare and execute deployments with pre-flight checks, release notes generation, and CI/CD integration. NEVER auto-deploy. Use when user explicitly says "deploy", "release", or "go live".
-argument-hint: [staging|production]
+argument-hint: "[staging|production]"
 allowed-tools: Bash(git *) Bash(npm *) Bash(docker *) Bash(gh *)
 disable-model-invocation: true
 ---

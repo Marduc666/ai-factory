@@ -1,7 +1,7 @@
 ---
 name: ai-factory.best-practices
 description: Code quality guidelines and best practices for writing clean, maintainable code. Covers naming, structure, error handling, testing, and code review standards. Use when writing code, reviewing, refactoring, or asking "how should I name this", "best practice for", "clean code".
-argument-hint: [naming|structure|errors|testing|review]
+argument-hint: "[naming|structure|errors|testing|review]"
 allowed-tools: Read Glob Grep
 ---
 

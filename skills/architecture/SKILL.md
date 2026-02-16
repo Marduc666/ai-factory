@@ -1,7 +1,7 @@
 ---
 name: ai-factory.architecture
 description: Software architecture patterns and guidelines. Covers Clean Architecture, DDD, microservices, monoliths, and how to choose the right approach. Use when designing systems, refactoring, asking "how should I structure", "which architecture", "monolith vs microservices".
-argument-hint: [clean|ddd|microservices|monolith|layers]
+argument-hint: "[clean|ddd|microservices|monolith|layers]"
 allowed-tools: Read Glob Grep
 ---
 

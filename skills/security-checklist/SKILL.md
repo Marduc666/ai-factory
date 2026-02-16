@@ -1,7 +1,7 @@
 ---
 name: ai-factory.security-checklist
 description: Security audit checklist based on OWASP Top 10 and best practices. Covers authentication, injection, XSS, CSRF, secrets management, and more. Use when reviewing security, before deploy, asking "is this secure", "security check", "vulnerability".
-argument-hint: [auth|injection|xss|csrf|secrets|api|infra|prompt-injection|race-condition|ignore <item>]
+argument-hint: "[auth|injection|xss|csrf|secrets|api|infra|prompt-injection|race-condition|ignore <item>]"
 allowed-tools: Read Glob Grep Write Edit Bash(npm audit) Bash(grep *)
 ---
 

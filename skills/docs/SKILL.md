@@ -1,7 +1,7 @@
 ---
 name: ai-factory.docs
 description: Generate and maintain project documentation. Creates a lean README as a landing page with detailed docs/ directory split by topic. Use when user says "create docs", "write documentation", "update docs", "generate readme", or "document project".
-argument-hint: [--web]
+argument-hint: "[--web]"
 allowed-tools: Read Write Edit Glob Grep Bash(mkdir, npx, python) AskUserQuestion WebFetch WebSearch
 disable-model-invocation: true
 metadata:

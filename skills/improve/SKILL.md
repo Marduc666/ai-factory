@@ -1,7 +1,7 @@
 ---
 name: ai-factory.improve
 description: Refine and enhance an existing implementation plan with a second iteration. Re-analyzes the codebase, checks for gaps, missing tasks, wrong dependencies, and improves the plan quality. Use after /ai-factory.task or /ai-factory.feature to polish the plan before implementation.
-argument-hint: [improvement prompt or empty for auto-review]
+argument-hint: "[improvement prompt or empty for auto-review]"
 allowed-tools: Read Write Edit Glob Grep Bash(git *) TaskCreate TaskUpdate TaskList TaskGet AskUserQuestion
 disable-model-invocation: false
 ---

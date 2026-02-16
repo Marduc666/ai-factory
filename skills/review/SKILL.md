@@ -1,7 +1,7 @@
 ---
 name: ai-factory.review
 description: Perform code review on staged changes or a pull request. Checks for bugs, security issues, performance problems, and best practices. Use when user says "review code", "check my code", "review PR", or "is this code okay".
-argument-hint: [PR number or empty]
+argument-hint: "[PR number or empty]"
 allowed-tools: Bash(git *) Bash(gh *) Read Glob Grep
 ---
 

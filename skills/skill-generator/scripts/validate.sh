@@ -22,12 +22,12 @@ WARNINGS=0
 
 error() {
     echo -e "${RED}ERROR:${NC} $1"
-    ((ERRORS++))
+    ERRORS=$((ERRORS + 1))
 }
 
 warn() {
     echo -e "${YELLOW}WARNING:${NC} $1"
-    ((WARNINGS++))
+    WARNINGS=$((WARNINGS + 1))
 }
 
 pass() {
@@ -112,6 +112,23 @@ else
     # Check for "when to use" keywords
     if ! echo "$DESC" | grep -qi "use when\|when \|use for\|for "; then
         warn "Description may not explain when to use the skill"
+    fi
+fi
+
+# Check argument-hint quoting (unquoted [] breaks YAML in OpenCode/Kilo Code, crashes Claude Code TUI)
+ARG_HINT_LINE=$(echo "$FRONTMATTER" | grep -E "^argument-hint:" | head -1)
+
+if [[ -n "$ARG_HINT_LINE" ]]; then
+    ARG_HINT_VALUE=$(echo "$ARG_HINT_LINE" | sed 's/^argument-hint:[[:space:]]*//')
+
+    if [[ "$ARG_HINT_VALUE" =~ ^\[.*\] ]]; then
+        # Starts with [ — unquoted YAML array syntax
+        error "argument-hint contains unquoted brackets: $ARG_HINT_VALUE"
+        echo "       Fix: wrap in quotes → argument-hint: \"$ARG_HINT_VALUE\""
+    elif [[ "$ARG_HINT_VALUE" =~ ^\".*\"$ ]] || [[ "$ARG_HINT_VALUE" =~ ^\'.*\'$ ]]; then
+        pass "argument-hint is properly quoted"
+    else
+        pass "argument-hint OK"
     fi
 fi
 

@@ -1,7 +1,7 @@
 ---
 name: ai-factory.evolve
 description: Self-improve AI Factory skills based on project context, accumulated patches, and codebase patterns. Analyzes what went wrong, what works, and enhances skills to prevent future issues. Use when you want to make AI smarter for your project.
-argument-hint: [skill-name or "all"]
+argument-hint: '[skill-name or "all"]'
 allowed-tools: Read Write Edit Glob Grep Bash(git *) AskUserQuestion
 disable-model-invocation: true
 ---

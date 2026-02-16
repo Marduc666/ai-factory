@@ -5,7 +5,7 @@ description: >-
   compose.yml, compose.override.yml (dev), compose.production.yml (hardened), and .dockerignore.
   Includes production security audit. Use when user says "dockerize", "add docker", "docker compose",
   "containerize", or "setup docker".
-argument-hint: [--audit]
+argument-hint: "[--audit]"
 allowed-tools: Read Edit Glob Grep Write Bash(git *) Bash(docker *) AskUserQuestion WebSearch WebFetch
 disable-model-invocation: true
 metadata:
