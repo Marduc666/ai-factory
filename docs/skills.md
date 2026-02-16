@@ -86,16 +86,27 @@ Verifies completed implementation against the plan:
 
 **Strict mode** (`--strict`) is recommended before merging: requires all tasks complete, build passing, tests passing, lint clean, zero TODOs in changed files.
 
-### `/ai-factory.fix <bug description>`
-Quick bug fix without plans:
+### `/ai-factory.fix [bug description]`
+Bug fix with optional plan-first mode:
 ```
 /ai-factory.fix TypeError: Cannot read property 'name' of undefined
 ```
+- Asks to choose mode: **Fix now** (immediate) or **Plan first** (review before fixing)
 - Investigates codebase to find root cause
 - Applies fix WITH logging (`[FIX]` prefix for easy filtering)
 - Suggests test coverage for the bug
 - Creates a **self-improvement patch** in `.ai-factory/patches/`
-- NO plans, NO reports - just fix, learn, and move on
+
+**Plan-first mode** — for complex bugs or when you want to review the approach:
+```
+/ai-factory.fix Something is broken    # Choose "Plan first" when asked
+```
+- Investigates the codebase, creates `.ai-factory/FIX_PLAN.md` with analysis, fix steps, risks
+- Stops after creating the plan — you review it at your own pace
+- When ready, run without arguments to execute the plan:
+```
+/ai-factory.fix                        # Detects FIX_PLAN.md, executes the fix, deletes the plan
+```
 
 ### `/ai-factory.evolve [skill-name|"all"]`
 Self-improve skills based on project experience:

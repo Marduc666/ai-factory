@@ -1,18 +1,40 @@
 ---
 name: ai-factory.fix
-description: Fix a specific bug or problem in the codebase. Analyzes code to find and fix issues without creating plans. Use when user reports a bug, error, or something not working. Always suggests test coverage and adds logging.
+description: Fix a specific bug or problem in the codebase. Supports two modes - immediate fix or plan-first. Without arguments executes existing FIX_PLAN.md. Always suggests test coverage and adds logging.
 argument-hint: <bug description or error message>
 allowed-tools: Read Write Edit Glob Grep Bash AskUserQuestion
 disable-model-invocation: false
 ---
 
-# Fix - Quick Bug Fix Workflow
+# Fix - Bug Fix Workflow
 
-Fix a specific bug or problem by analyzing the codebase directly. No plans, no reports.
+Fix a specific bug or problem in the codebase. Supports two modes: immediate fix or plan-first approach.
 
 ## Workflow
 
-### Step 0: Load Project Context & Past Experience
+### Step 0: Check for Existing Fix Plan
+
+**BEFORE anything else**, check if `.ai-factory/FIX_PLAN.md` exists.
+
+**If the file EXISTS:**
+- Read `.ai-factory/FIX_PLAN.md`
+- Inform the user: "Found existing fix plan. Executing fix based on the plan."
+- **Skip Steps 0.1 through 1** — go directly to **Step 2: Investigate the Codebase**, using the plan as your guide
+- Follow each step of the plan sequentially
+- After the fix is fully applied and verified, **delete** `.ai-factory/FIX_PLAN.md`:
+  ```bash
+  rm .ai-factory/FIX_PLAN.md
+  ```
+- Continue to Step 4 (Verify), Step 5 (Test suggestion), Step 6 (Patch)
+
+**If the file DOES NOT exist AND `$ARGUMENTS` is empty:**
+- Tell the user: "No fix plan found and no problem description provided. Please either provide a bug description (`/ai-factory.fix <description>`) or create a fix plan first."
+- **STOP.**
+
+**If the file DOES NOT exist AND `$ARGUMENTS` is provided:**
+- Continue to Step 0.1 below.
+
+### Step 0.1: Load Project Context & Past Experience
 
 **Read `.ai-factory/DESCRIPTION.md`** if it exists to understand:
 - Tech stack (language, framework, database)
@@ -26,7 +48,7 @@ Fix a specific bug or problem by analyzing the codebase directly. No plans, no r
 - If the current problem resembles a past patch — apply the same approach or avoid the same mistakes
 - This is your accumulated experience. Use it.
 
-### Step 1: Understand the Problem
+### Step 1: Understand the Problem & Choose Mode
 
 From `$ARGUMENTS`, identify:
 - Error message or unexpected behavior
@@ -42,6 +64,83 @@ To fix this effectively, I need more context:
 3. Can you share the error message/stack trace?
 4. When did this start happening?
 ```
+
+**After understanding the problem, ask the user to choose a mode using `AskUserQuestion`:**
+
+Question: "How would you like to proceed with the fix?"
+
+Options:
+1. **Fix now** — Investigate and apply the fix immediately
+2. **Plan first** — Create a fix plan for review, then fix later
+
+**If user chooses "Plan first":**
+- Proceed to **Step 1.1: Create Fix Plan**
+
+**If user chooses "Fix now":**
+- Skip Step 1.1, proceed directly to **Step 2: Investigate the Codebase**
+
+### Step 1.1: Create Fix Plan
+
+Investigate the codebase enough to understand the problem and create a plan.
+
+1. Search for relevant files using Glob/Grep
+2. Read the code around the issue
+3. Trace the data flow
+4. Identify the root cause (or most likely candidates)
+
+Then create `.ai-factory/FIX_PLAN.md` with this structure:
+
+```markdown
+# Fix Plan: [Brief title]
+
+**Problem:** [What's broken — from user's description]
+**Created:** YYYY-MM-DD HH:mm
+
+## Analysis
+
+What was found during investigation:
+- Root cause (or suspected root cause)
+- Affected files and functions
+- Impact scope
+
+## Fix Steps
+
+Step-by-step plan for implementing the fix:
+
+1. [ ] Step one — what to change and why
+2. [ ] Step two — ...
+3. [ ] Step three — ...
+
+## Files to Modify
+
+- `path/to/file.ts` — what changes are needed
+- `path/to/another.ts` — what changes are needed
+
+## Risks & Considerations
+
+- Potential side effects
+- Things to verify after the fix
+- Edge cases to watch for
+
+## Test Coverage
+
+- What tests should be added
+- What edge cases to cover
+```
+
+**After creating the plan, output:**
+
+```
+## Fix Plan Created ✅
+
+Plan saved to `.ai-factory/FIX_PLAN.md`.
+
+Review the plan and when you're ready to execute, run:
+
+/ai-factory.fix
+```
+
+**STOP here. Do NOT apply the fix.**
 
 ### Step 2: Investigate the Codebase
 
@@ -189,13 +288,16 @@ function fixedFunction(input) {
 
 ## Important Rules
 
-1. **NO plans** - This is a direct fix, not planned work
-2. **NO reports** - Don't create summary documents
-3. **ALWAYS log** - Every fix must have logging for feedback
-4. **ALWAYS suggest tests** - Help prevent regressions
-5. **Root cause** - Fix the actual problem, not symptoms
-6. **Minimal changes** - Don't refactor unrelated code
-7. **One fix at a time** - Don't scope creep
+1. **Check FIX_PLAN.md first** - Always check for existing plan before anything else
+2. **Plan mode = plan only** - When user chooses "Plan first", create the plan and STOP. Do NOT fix.
+3. **Execute mode = follow the plan** - When FIX_PLAN.md exists, follow it step by step, then delete it
+4. **NO reports** - Don't create summary documents (patches are learning artifacts, not reports)
+5. **ALWAYS log** - Every fix must have logging for feedback
+6. **ALWAYS suggest tests** - Help prevent regressions
+7. **Root cause** - Fix the actual problem, not symptoms
+8. **Minimal changes** - Don't refactor unrelated code
+9. **One fix at a time** - Don't scope creep
+10. **Clean up** - Delete FIX_PLAN.md after successful fix execution
 
 ## After Fixing
 
@@ -317,7 +419,9 @@ default avatar URL. Also added a null check in the Avatar sub-component.
 ---
 
 **DO NOT:**
-- ❌ Create PLAN.md or any plan files
+- ❌ Apply a fix when user chose "Plan first" — only create FIX_PLAN.md and stop
+- ❌ Skip the FIX_PLAN.md check at the start
+- ❌ Leave FIX_PLAN.md after successful fix execution — always delete it
 - ❌ Generate reports or summaries (patches are NOT reports — they are learning artifacts)
 - ❌ Refactor unrelated code
 - ❌ Add features while fixing

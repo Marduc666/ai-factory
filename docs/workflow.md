@@ -27,7 +27,7 @@ AI Factory provides a set of **workflow skills** that form the core development 
                │                  │            │    feature      │  │    fix       │
                │  Small tasks     │            │                 │  │              │
                │  No git branch   │            │ Full features   │  │ Bug fixes    │
-               │  Quick work      │            │ Git branch      │  │ No plans     │
+               │  Quick work      │            │ Git branch      │  │ Optional plan│
                │                  │            │ Full plan       │  │ With logging │
                └────────┬─────────┘            └────────┬────────┘  └───────┬──────┘
                         │                               │                   │
@@ -108,7 +108,7 @@ AI Factory provides a set of **workflow skills** that form the core development 
 | `/ai-factory.feature` | Full features, stories, epics | Yes | `.ai-factory/features/<branch>.md` |
 | `/ai-factory.feature --parallel` | Concurrent features via worktrees | Yes + worktree | User runs `/ai-factory.task` in worktree |
 | `/ai-factory.improve` | Refine plan before implementation | No | No (improves existing) |
-| `/ai-factory.fix` | Bug fixes, errors, hotfixes | No | No (direct fix) |
+| `/ai-factory.fix` | Bug fixes, errors, hotfixes | No | Optional (`.ai-factory/FIX_PLAN.md`) |
 | `/ai-factory.verify` | Post-implementation quality check | No | No (reads existing) |
 
 ## Workflow Skills
@@ -159,13 +159,22 @@ Reads past patches from `.ai-factory/patches/` to learn from previous mistakes, 
 
 Optional step after `/ai-factory.implement`. Goes through every task in the plan and verifies the code actually implements it. Checks build, tests, lint, looks for leftover TODOs, undocumented env vars, and plan-vs-code drift. Offers to fix any gaps found. At the end, suggests running `/ai-factory.security-checklist` and `/ai-factory.review`. Use `--strict` before merging to main.
 
-### `/ai-factory.fix <bug description>` — fix and learn
+### `/ai-factory.fix [bug description]` — fix and learn
 
 ```
 /ai-factory.fix TypeError: Cannot read property 'name' of undefined
 ```
 
-Investigates, fixes the bug with logging, and creates a **self-improvement patch** in `.ai-factory/patches/`. No plans, no overhead — just fix, learn, move on. Every patch makes future `/ai-factory.implement` and `/ai-factory.fix` smarter.
+Two modes — choose when you invoke:
+- **Fix now** — investigates and fixes immediately with logging
+- **Plan first** — creates `.ai-factory/FIX_PLAN.md` with analysis and fix steps, then stops for review
+
+When a plan exists, run without arguments to execute:
+```
+/ai-factory.fix    # reads FIX_PLAN.md → applies fix → deletes plan
+```
+
+Every fix creates a **self-improvement patch** in `.ai-factory/patches/`. Every patch makes future `/ai-factory.implement` and `/ai-factory.fix` smarter.
 
 ### `/ai-factory.evolve` — improve skills from experience
 
