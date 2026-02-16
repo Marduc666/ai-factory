@@ -15,34 +15,71 @@ export interface AiFactoryConfig {
     github: boolean;
     filesystem: boolean;
     postgres: boolean;
+    chromeDevtools: boolean;
   };
 }
 
 const CONFIG_FILENAME = '.ai-factory.json';
 const CURRENT_VERSION: string = pkg.version;
 
+function resolveAgentId(agentId: string | undefined): string {
+  if (!agentId) {
+    return 'claude';
+  }
+
+  try {
+    getAgentConfig(agentId);
+    return agentId;
+  } catch {
+    return 'claude';
+  }
+}
+
 export function getConfigPath(projectDir: string): string {
   return path.join(projectDir, CONFIG_FILENAME);
 }
 
 export function createDefaultConfig(agentId: string = 'claude'): AiFactoryConfig {
-  const agent = getAgentConfig(agentId);
+  const resolvedAgentId = resolveAgentId(agentId);
+  const agent = getAgentConfig(resolvedAgentId);
+
   return {
     version: CURRENT_VERSION,
-    agent: agentId,
+    agent: resolvedAgentId,
     skillsDir: agent.skillsDir,
     installedSkills: [],
     mcp: {
       github: false,
       filesystem: false,
-      postgres: false,
+      chromeDevtools: false,
+    },
+  };
+}
+
+export function migrateConfig(config: Partial<AiFactoryConfig>): AiFactoryConfig {
+  const defaults = createDefaultConfig(resolveAgentId(config.agent));
+
+  return {
+    ...defaults,
+    ...config,
+    installedSkills: Array.isArray(config.installedSkills) ? config.installedSkills : defaults.installedSkills,
+    mcp: {
+      ...defaults.mcp,
+      ...(config.mcp ?? {}),
+      
     },
   };
 }
 
 export async function loadConfig(projectDir: string): Promise<AiFactoryConfig | null> {
   const configPath = getConfigPath(projectDir);
-  return readJsonFile<AiFactoryConfig>(configPath);
+  const loadedConfig = await readJsonFile<Partial<AiFactoryConfig>>(configPath);
+
+  if (!loadedConfig) {
+    return null;
+  }
+
+  return migrateConfig(loadedConfig); 
 }
 
 export async function saveConfig(projectDir: string, config: AiFactoryConfig): Promise<void> {
