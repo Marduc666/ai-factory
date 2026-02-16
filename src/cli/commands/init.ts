@@ -36,6 +36,7 @@ export async function initCommand(): Promise<void> {
       github: answers.mcpGithub,
       filesystem: answers.mcpFilesystem,
       postgres: answers.mcpPostgres,
+      chromeDevtools: answers.mcpChromeDevtools,
     };
 
     await saveConfig(projectDir, config);
