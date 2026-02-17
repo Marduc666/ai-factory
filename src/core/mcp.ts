@@ -30,6 +30,15 @@ export interface McpOptions {
   chromeDevtools: boolean;
 }
 
+type McpServerKey = keyof McpOptions;
+
+const MCP_SERVER_FILES: Record<McpServerKey, string> = {
+  github: 'github.json',
+  filesystem: 'filesystem.json',
+  postgres: 'postgres.json',
+  chromeDevtools: 'chrome-devtools.json',
+};
+
 function toOpenCodeFormat(config: McpServerConfig): OpenCodeMcpServerConfig {
   const command = [config.command, ...(config.args || [])];
   const result: OpenCodeMcpServerConfig = { type: 'local', command };
@@ -37,6 +46,23 @@ function toOpenCodeFormat(config: McpServerConfig): OpenCodeMcpServerConfig {
     result.environment = config.env;
   }
   return result;
+}
+
+async function getSelectedServerTemplates(options: McpOptions, mcpTemplatesDir: string): Promise<Array<[McpServerKey, McpServerConfig]>> {
+  const selectedTemplates: Array<[McpServerKey, McpServerConfig]> = [];
+
+  for (const key of Object.keys(MCP_SERVER_FILES) as McpServerKey[]) {
+    if (!options[key]) {
+      continue;
+    }
+
+    const template = await readJsonFile<McpServerConfig>(path.join(mcpTemplatesDir, MCP_SERVER_FILES[key]));
+    if (template) {
+      selectedTemplates.push([key, template]);
+    }
+  }
+
+  return selectedTemplates;
 }
 
 export async function configureMcp(projectDir: string, options: McpOptions, agentId: string = 'claude'): Promise<string[]> {
@@ -54,6 +80,11 @@ export async function configureMcp(projectDir: string, options: McpOptions, agen
   await ensureDir(settingsDir);
 
   const mcpTemplatesDir = path.join(getMcpDir(), 'templates');
+  const selectedTemplates = await getSelectedServerTemplates(options, mcpTemplatesDir);
+
+  if (selectedTemplates.length === 0) {
+    return configuredServers;
+  }
 
   if (isOpenCode) {
     let settings: OpenCodeSettings = {};
@@ -68,26 +99,12 @@ export async function configureMcp(projectDir: string, options: McpOptions, agen
       settings.mcp = {};
     }
 
-    const serverEntries: [string, string][] = [
-      ['github', 'github.json'],
-      ['filesystem', 'filesystem.json'],
-      ['postgres', 'postgres.json'],
-      ['chromeDevtools', 'chrome-devtools.json'],
-    ];
-
-    for (const [key, file] of serverEntries) {
-      if (options[key as keyof McpOptions]) {
-        const template = await readJsonFile<McpServerConfig>(path.join(mcpTemplatesDir, file));
-        if (template) {
-          settings.mcp[key] = toOpenCodeFormat(template);
-          configuredServers.push(key);
-        }
-      }
+    for (const [key, template] of selectedTemplates) {
+      settings.mcp[key] = toOpenCodeFormat(template);
+      configuredServers.push(key);
     }
 
-    if (configuredServers.length > 0) {
-      await writeJsonFile(settingsPath, settings);
-    }
+    await writeJsonFile(settingsPath, settings);
   } else {
     let settings: McpSettings = {};
     if (await fileExists(settingsPath)) {
@@ -101,26 +118,12 @@ export async function configureMcp(projectDir: string, options: McpOptions, agen
       settings.mcpServers = {};
     }
 
-    const serverEntries: [string, string][] = [
-      ['github', 'github.json'],
-      ['filesystem', 'filesystem.json'],
-      ['postgres', 'postgres.json'],
-      ['chromeDevtools', 'chrome-devtools.json'],
-    ];
-
-    for (const [key, file] of serverEntries) {
-      if (options[key as keyof McpOptions]) {
-        const template = await readJsonFile<McpServerConfig>(path.join(mcpTemplatesDir, file));
-        if (template) {
-          settings.mcpServers[key] = template;
-          configuredServers.push(key);
-        }
-      }
+    for (const [key, template] of selectedTemplates) {
+      settings.mcpServers[key] = template;
+      configuredServers.push(key);
     }
 
-    if (configuredServers.length > 0) {
-      await writeJsonFile(settingsPath, settings);
-    }
+    await writeJsonFile(settingsPath, settings);
   }
 
   return configuredServers;
@@ -149,7 +152,7 @@ export function getMcpInstructions(servers: string[]): string[] {
 
   if (servers.includes('chromeDevtools')) {
     instructions.push(
-        'Chrome Devtools MCP: No additional configuration needed. Server provides your coding agent control and inspect a live Chrome browser.'
+      'Chrome Devtools MCP: No additional configuration needed. Server provides your coding agent control and inspect a live Chrome browser.'
     );
   }
 
