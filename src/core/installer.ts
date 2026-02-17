@@ -1,5 +1,5 @@
 import path from 'path';
-import { copyDirectory, getSkillsDir, ensureDir, listDirectories, readTextFile, writeTextFile } from '../utils/fs.js';
+import { copyDirectory, getSkillsDir, ensureDir, listDirectories, readTextFile, writeTextFile, fileExists } from '../utils/fs.js';
 import type { AiFactoryConfig } from './config.js';
 import { getAgentConfig } from './agents.js';
 import { processSkillTemplates, buildTemplateVars, processTemplate } from './template.js';
@@ -42,6 +42,44 @@ async function installSkillWithTransformer(
     }
     await processSkillTemplates(targetSkillDir, agentConfig);
   }
+}
+
+async function reconcileCustomSkills(customSkills: string[], projectDir: string, config: AiFactoryConfig): Promise<string[]> {
+  const packageSkillsDir = getSkillsDir();
+  const reconciledCustomSkills: string[] = [];
+  const agentConfig = getAgentConfig(config.agent);
+
+  for (const customSkill of customSkills) {
+    const [stack, templateSkill] = customSkill.split('/');
+
+    if (!stack || !templateSkill) {
+      console.warn(`Warning: Invalid custom skill entry "${customSkill}". Skipping.`);
+      continue;
+    }
+
+    const templateSkillDir = path.join(packageSkillsDir, '_templates', stack, templateSkill);
+
+    if (await fileExists(path.join(templateSkillDir, 'SKILL.md'))) {
+      try {
+        await installSkillWithTransformer(
+          templateSkillDir,
+          templateSkill,
+          projectDir,
+          config.skillsDir,
+          config.agent,
+          agentConfig,
+        );
+        reconciledCustomSkills.push(customSkill);
+      } catch (error) {
+        console.warn(`Warning: Could not reconcile custom skill "${customSkill}": ${error}`);
+      }
+      continue;
+    }
+
+    console.warn(`Warning: Custom skill source not found for "${customSkill}". Skipping.`);
+  }
+
+  return reconciledCustomSkills;
 }
 
 export async function installSkills(options: InstallOptions): Promise<string[]> {
@@ -111,5 +149,7 @@ export async function updateSkills(config: AiFactoryConfig, projectDir: string):
     agentId: config.agent,
   });
 
-  return [...installedBaseSkills, ...customSkills];
+  const reconciledCustomSkills = await reconcileCustomSkills(customSkills, projectDir, config);
+
+  return [...installedBaseSkills, ...reconciledCustomSkills];
 }
