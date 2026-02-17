@@ -152,7 +152,7 @@ export function getMcpInstructions(servers: string[]): string[] {
 
   if (servers.includes('chromeDevtools')) {
     instructions.push(
-      'Chrome Devtools MCP: No additional configuration needed. Server provides your coding agent control and inspect a live Chrome browser.'
+      'Chrome Devtools MCP: No additional configuration needed. Server provides your coding agent with control of and the ability to inspect a live Chrome browser.'
     );
   }
 
