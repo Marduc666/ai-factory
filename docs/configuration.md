@@ -13,7 +13,8 @@
   "mcp": {
     "github": true,
     "postgres": false,
-    "filesystem": false
+    "filesystem": false,
+    "chromeDevtools": false
   }
 }
 ```
@@ -29,6 +30,7 @@ AI Factory can configure these MCP servers:
 | GitHub | PRs, issues, repo operations | `GITHUB_TOKEN` |
 | Postgres | Database queries | `DATABASE_URL` |
 | Filesystem | Advanced file operations | - |
+| Chrome DevTools | Inspect/debug browser state and network requests | - |
 
 Configuration saved to agent's settings file (e.g. `.claude/settings.local.json` for Claude Code, `.cursor/mcp.json` for Cursor, `.roo/mcp.json` for Roo Code, `.kilocode/mcp.json` for Kilo Code, `opencode.json` for OpenCode, gitignored).
 
