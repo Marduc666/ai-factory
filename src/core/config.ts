@@ -58,11 +58,13 @@ export function createDefaultConfig(agentId: string = 'claude'): AiFactoryConfig
 }
 
 export function migrateConfig(config: Partial<AiFactoryConfig>): AiFactoryConfig {
-  const defaults = createDefaultConfig(resolveAgentId(config.agent));
+  const resolvedAgentId = resolveAgentId(config.agent);
+  const defaults = createDefaultConfig(resolvedAgentId);
 
   return {
     ...defaults,
     ...config,
+    agent: resolvedAgentId,
     installedSkills: Array.isArray(config.installedSkills) ? config.installedSkills : defaults.installedSkills,
     mcp: {
       ...defaults.mcp,
