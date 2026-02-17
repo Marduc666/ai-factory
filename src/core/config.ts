@@ -51,6 +51,7 @@ export function createDefaultConfig(agentId: string = 'claude'): AiFactoryConfig
     mcp: {
       github: false,
       filesystem: false,
+      postgres: false,
       chromeDevtools: false,
     },
   };
